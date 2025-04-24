@@ -31,14 +31,24 @@ import pandas as pd
 import numpy as np
 import customize_helper
 
+from pathlib import Path
+
 # Sentence transformer model HF
-model_path = 'models/all-MiniLM-L6-v2'
-model_id = model_path.split("/")[1]
+model_path = Path('models/all-MiniLM-L6-v2')
+model_id = model_path.name
+
+supported_languages = ["pl",]
+chosen_language = "pl"
+if chosen_language not in supported_languages:
+    chosen_language = ""
+else:
+    chosen_language = f"_{chosen_language}"
 
 # INPUT FILE
 # Default file with empty embeddings
-json_in_file = 'prompt-sentences-main/prompt_sentences.json'
-json_in_file_name = json_in_file.split(".json")[0]
+prompt_sentences = Path("prompt-sentences-main")
+json_in_file = prompt_sentences / f"prompt_sentences{chosen_language}.json"
+json_in_file_name = json_in_file.stem
 
 # OUTPUT FILE
 json_out_file_name = f'{json_in_file_name}-{model_id}.json'

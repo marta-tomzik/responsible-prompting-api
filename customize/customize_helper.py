@@ -38,7 +38,7 @@ def query_model(texts, model_path):
     model = SentenceTransformer(model_path)
     input_embedding = model.encode(texts)
     out.append(input_embedding)
-    if( out != [] ):
+    if out:
         return out[0]
     else:
         return out
@@ -46,12 +46,12 @@ def query_model(texts, model_path):
 # Returns euclidean distance between two embeddings
 def get_distance(embedding1, embedding2):
     total = 0
-    if( len(embedding1) != len(embedding2)):
+    if len(embedding1) != len(embedding2):
         return math.inf
 
     for i, obj in enumerate(embedding1):
         total += math.pow(embedding2[0][i] - embedding1[0][i], 2)
-    return(math.sqrt(total))
+    return math.sqrt(total)
 
 # Returns the centroid for a given value
 def get_centroid(v, dimension = 384, k = 10):
@@ -69,7 +69,7 @@ def get_centroid(v, dimension = 384, k = 10):
         i += 1
 
     # Update centroid considering only the k-near elements
-    if(len(v['prompts']) <= k):
+    if len(v['prompts']) <= k:
         return centroid
     else:
         k_items = pd.DataFrame(columns=['embedding', 'distance'])
@@ -97,7 +97,7 @@ def populate_embeddings(prompt_json, model_path):
         for p in v['prompts']:
                 if( p['text'] != '' and p['embedding'] == []): # only considering missing embeddings
                     embedding = query_model(p['text'], model_path)
-                    if( 'error' in embedding ):
+                    if 'error' in embedding:
                         p['embedding'] = []
                         errors += 1
                     else:
@@ -108,7 +108,7 @@ def populate_embeddings(prompt_json, model_path):
         for p in v['prompts']:
             if(p['text'] != '' and p['embedding'] == []):
                 embedding = query_model(p['text'], model_path)
-                if('error' in embedding):
+                if 'error' in embedding:
                     p['embedding'] = []
                     errors += 1
                 else:
